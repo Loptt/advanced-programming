@@ -2,14 +2,46 @@
 
 #define SIZE 2
 
+/* This function prompts the user to enter a SIZE by SIZE matrix
+* Parameters:
+* char *message: The message to print to the user
+* int m[][]: The matrix to save the entered values
+*/
 void readMatrix(const char *message, int matrix[SIZE][SIZE]);
 
+/* This function prints a matrix to the user
+* Parameters:
+* char *message: The message to print to the user
+* int m[][]: The matrix to print to the screen
+*/
 void printMatrix(const char *message, int matrix[SIZE][SIZE]);
 
+/* This function adds two matrices A and B and stores the result in R
+* Parameters:
+* int a[][]: The first matrix to add
+* int b[][]: The second matrix to add
+* int r[][]: The matrix to store the result
+*/
 void sumMatrices(int aMatrix[SIZE][SIZE], int bMatrix[SIZE][SIZE], int rMatrix[SIZE][SIZE]);
 
+/* This function subtracts two matrices A and B and stores the result in R
+* Parameters:
+* int a[][]: The first matrix to subtract
+* int b[][]: The second matrix to subtract
+* int r[][]: The matrix to store the result
+*/
 void subtractMatrices(int aMatrix[SIZE][SIZE], int bMatrix[SIZE][SIZE], int rMatrix[SIZE][SIZE]);
 
+/* This function multiplies two matrices A and B and stores the result in R
+* Parameters:
+* int a[][]: The first matrix to multiply
+* int b[][]: The second matrix to multiply
+* int r[][]: The matrix to store the result
+*/
+void multiplyMatrices(int aMatrix[SIZE][SIZE], int bMatrix[SIZE][SIZE], int rMatrix[SIZE][SIZE]);
+
+
+// Main function
 int main(void) 
 {
     int aMatrix[SIZE][SIZE];
@@ -27,6 +59,9 @@ int main(void)
 
     subtractMatrices(aMatrix, bMatrix, rMatrix);
     printMatrix("Subtraction of A and B", rMatrix);
+
+    multiplyMatrices(aMatrix, bMatrix, rMatrix);
+    printMatrix("Multiplication of A and B", rMatrix);
 }
 
 void readMatrix(const char *message, int matrix[SIZE][SIZE]) 
@@ -79,16 +114,24 @@ void subtractMatrices(int aMatrix[SIZE][SIZE], int bMatrix[SIZE][SIZE], int rMat
     }
 }
 
-void multipluMatrices(int aMatrix[SIZE][SIZE], int bMatrix[SIZE][SIZE], int rMatrix[SIZE][SIZE]) 
+void multiplyMatrices(int aMatrix[SIZE][SIZE], int bMatrix[SIZE][SIZE], int rMatrix[SIZE][SIZE]) 
 {
+    int aux = 0;
+
     for(int i = 0; i < SIZE; i++) 
     {
         for(int j = 0; j < SIZE; j++)
         {
             for(int k = 0; k < SIZE; k++)
             {
-                  
-            }   
+                aux += aMatrix[i][k] * bMatrix[k][j];
+
+                //printf("%d x %d ", aMatrix[i][k], bMatrix[k][j]);
+            }
+
+            //printf("\n");
+
+            rMatrix[i][j] = aux;
         }
     }
 }
