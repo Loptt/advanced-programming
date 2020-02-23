@@ -1,3 +1,11 @@
+//
+// Author: Carlos Estrada
+// ID: A01039919
+// Date: 19/02/2020
+//
+// Exercises with structs in C
+//
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>

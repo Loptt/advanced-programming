@@ -12,7 +12,7 @@
 // This function cleans the stdin buffer since fflush is useless
 // for stdin and fgets is too problematic, credits to Mathiun for this
 // on https://stackoverflow.com/questions/17318886/fflush-is-not-working-in-linux
-void clean_stdin(void);
+void cleanStdin(void);
 
 // Main Function
 int main(void) {
@@ -23,12 +23,12 @@ int main(void) {
     printf("Enter an integer: ");
     scanf("%d", &integer);
 
-    clean_stdin();
+    cleanStdin();
 
     printf("Enter a character: ");
     scanf("%c", &character);
 
-    clean_stdin();
+    cleanStdin();
 
     printf("Enter a double: ");
     scanf("%lf", &ddouble);
@@ -40,7 +40,7 @@ int main(void) {
         ddouble, sizeof(ddouble), DBL_MIN, DBL_MAX);
 }
 
-void clean_stdin(void) {
+void cleanStdin(void) {
     int c;
     do {
         c = getchar();

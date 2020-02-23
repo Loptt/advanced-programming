@@ -1,3 +1,11 @@
+//
+// Author: Carlos Estrada
+// ID: A01039919
+// Date: 19/02/2020
+//
+// Exercises with matrices and functions in C
+//
+
 #include <stdio.h>
 
 #define SIZE 2
@@ -125,13 +133,10 @@ void multiplyMatrices(int aMatrix[SIZE][SIZE], int bMatrix[SIZE][SIZE], int rMat
             for(int k = 0; k < SIZE; k++)
             {
                 aux += aMatrix[i][k] * bMatrix[k][j];
-
-                //printf("%d x %d ", aMatrix[i][k], bMatrix[k][j]);
             }
 
-            //printf("\n");
-
             rMatrix[i][j] = aux;
+            aux = 0;
         }
     }
 }

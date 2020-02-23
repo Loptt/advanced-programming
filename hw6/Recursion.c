@@ -1,3 +1,11 @@
+//
+// Author: Carlos Estrada
+// ID: A01039919
+// Date: 19/02/2020
+//
+// Exercises with recursion in C
+//
+
 #include <stdio.h>
 
 /* This function calculates the factorial of a given number
