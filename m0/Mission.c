@@ -13,6 +13,7 @@ typedef struct agent {
     char name[100];
     char lastName[100];    
     int age;
+    int id;
     NodeChar *headActivos;
     NodeChar *headMissions;
 } Agent;
@@ -22,7 +23,7 @@ typedef struct nodeAgent {
     Agent agent;
 } NodeAgent;
 
-NodeAgent *headAgents;
+NodeAgent *headAgents = 0;
 
 void addAgent();
 
@@ -36,12 +37,20 @@ bool validateActive(char *mission);
 
 bool validateMission(char *mission);
 
+void addNodeChar(NodeChar **head, char *content);
+
+void deleteAgent();
+
+void deleteAgentInfo(Agent agent);
+
 int main(void)
 {
-    int opt; 
-    while (true)
+    int opt;
+    bool running = true;
+    while (running)
     {
-        printf("MENU: \n 1. Add agent\n 2. Show all agents \n");
+        printf("\n=======================\n");
+        printf("\nMENU: \n 1. Add agent\n 2. Show all agents \n 3. Delete agent\n 4. Quit\n\n");
         printf("Enter option: ");
         scanf("%d", &opt);
 
@@ -53,6 +62,11 @@ int main(void)
             case 2:
                 showAgents();
                 break;
+            case 3:
+                deleteAgent();
+                break;
+            case 4:
+                running = false;
         }
     }
 }
@@ -139,19 +153,23 @@ void readAgent(Agent *agent)
 
     NodeChar *curr = 0;
 
+    agent->headActivos = 0;
+    agent->headMissions = 0;
+
     printf("Enter new agent first name: ");
     scanf("%s", agent->name);
 
     printf("Enter new agent last name: ");
     scanf("%s", agent->lastName);
 
+    printf("Enter new agent ID (numeric): ");
+    scanf("%d", &agent->id);
+
     printf("Enter new agent age: ");
     scanf("%d", &agent->age);
 
     printf("Enter active amount: ");
     scanf("%d", &activeAmount);
-
-    curr = agent->headActivos;
 
     for (int i = 0; i < activeAmount; i++)
     {
@@ -164,10 +182,7 @@ void readAgent(Agent *agent)
             scanf("%s", active);
         }
 
-        curr = (NodeChar*) malloc(sizeof(NodeChar));
-        strcpy(curr->content, active);
-        curr->content[13] = '\0';
-        curr = curr->next;
+        addNodeChar(&agent->headActivos, active);
     }
     
     printf("Enter mission amount: ");
@@ -186,9 +201,7 @@ void readAgent(Agent *agent)
             scanf("%s", mission);
         }
 
-        curr = (NodeChar*) malloc(sizeof(NodeChar));
-        strcpy(curr->content, mission);
-        curr = curr->next;
+        addNodeChar(&agent->headMissions, mission);
     }
 
     printf("Agent added succesfully\n\n");
@@ -196,6 +209,8 @@ void readAgent(Agent *agent)
 
 void showAgents()
 {
+    printf("\n\nAGENTS:\n\n");
+    
     if (headAgents == 0)
     {
         printf("No agents registered!\n\n");
@@ -206,6 +221,7 @@ void showAgents()
     while (curr != 0)
     {
         printAgent(curr->agent);
+        curr = curr->next;
     }
 }
 
@@ -213,38 +229,135 @@ void printAgent(Agent agent)
 {
     NodeChar *curr = 0;
 
-    printf("==============================\n");
-
     printf("Agent %s %s\n", agent.name, agent.lastName);
+    printf("ID: %d\n", agent.id);
     printf("Age: %d\n", agent.age);
 
-    printf("------------\n");
-    printf("Actives: \n");
-    curr = agent.headActivos;
-
-    while (curr != 0)
+    if (agent.headActivos == 0)
     {
-        printf("Imprimiento 1\n");
-        printf("%s, ", curr->content);
-        printf("Imprimiento 1\n");
+        printf("No Actives! \n");
+    }
+    else
+    {
+        printf("------------\n");
+        printf("Actives: \n");
+        curr = agent.headActivos;
+
+        while (curr != 0)
+        {
+            printf("%s, ", curr->content);
+            curr = curr->next;
+        }
+
+        printf("\n");
+    }
+    
+    if (agent.headMissions == 0)
+    {
+        printf("No Missions! \n");
+    }
+    else
+    {
+        printf("------------\n");
+
+        printf("Missions: \n");
+        curr = agent.headMissions;
+
+        while (curr != 0)
+        {
+            printf("%s, ", curr->content);
+            curr = curr->next;
+        }
+
+        printf("\n");
+        printf("------------\n");
+    }
+    
+
+    printf("\n");
+}
+
+void addNodeChar(NodeChar **head, char* content)
+{
+    NodeChar *curr = *head;
+
+    if (*head == 0)
+    {
+        *head = (NodeChar*) malloc(sizeof(NodeChar));
+        strcpy((*head)->content, content);
+        (*head)->next = 0;
+        return; 
+    }
+
+    while (curr->next != 0)
+    {
         curr = curr->next;
     }
 
-    printf("\n");
-    printf("------------\n");
+    curr->next =  (NodeChar*) malloc(sizeof(NodeChar));
+    strcpy(curr->next->content, content);
+    curr->next->next = 0;
+}
 
-    printf("Missions: \n");
-    curr = agent.headMissions;
+void deleteAgent()
+{
+    int id = 0;
+    NodeAgent *curr = headAgents;
+    NodeAgent *tmp;
 
-    while (curr != 0)
+    printf("Enter agent ID: ");
+    scanf("%d", &id);
+
+    if (curr == 0)
     {
-        printf("%s, ", curr->content);
-        curr = curr->next;
+        printf("\nError: Agent not found!\n");
+        return;
     }
 
-    printf("\n");
-    printf("------------\n");
-    printf("==============================\n");
+    if (curr->agent.id == id)
+    {
+        headAgents = curr->next;
+        deleteAgentInfo(curr->agent);
+        free(curr);
+        printf("\nAgent %d deleted successfully.\n", id);
+        return;
+    }
 
+    while (curr->next != 0)
+    {
+        if (curr->next->agent.id == id)
+        {
+            tmp = curr->next;
+            curr->next = curr->next->next;
+            deleteAgentInfo(tmp->agent);
+            free(tmp);
+            printf("\nAgent %d deleted successfully.\n", id);
+            return;
+        }
+    }
 
+    printf("\nError: Agent not found!\n");
+}
+
+void deleteAgentInfo(Agent agent)
+{
+    NodeChar *curr1 = agent.headActivos;
+    NodeChar *curr2 = agent.headActivos;
+
+    while (curr1 != 0)
+    {
+        curr2 = curr1;
+        curr1 = curr1->next;
+        free(curr2);
+    }
+
+    curr1 = agent.headMissions;
+    curr2 = agent.headMissions;
+
+    while (curr1 != 0)
+    {
+        curr2 = curr1;
+        curr1 = curr1->next;
+        free(curr2);
+    }
 }
