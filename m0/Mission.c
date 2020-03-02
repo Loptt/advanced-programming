@@ -1,14 +1,30 @@
+//
+// Author: Carlos Estrada
+// ID: A01039919
+// Date: 01/03/2020
+//
+// Mission 0
+//
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stddef.h>
 
+/*
+================================
+Structs definitions
+================================
+*/
+
+// Node for string lists
 typedef struct nodeChar {
     struct nodeChar *next;
     char content[100];
 } NodeChar;
 
+// Struct defining the agent's characteristics
 typedef struct agent {
     char name[100];
     char lastName[100];    
@@ -18,31 +34,98 @@ typedef struct agent {
     NodeChar *headMissions;
 } Agent;
 
+// Node for agent lists
 typedef struct nodeAgent {
     struct nodeAgent *next;
     Agent agent;
 } NodeAgent;
 
+/*
+================================
+Global variables
+================================
+*/
+
+// Agents list
 NodeAgent *headAgents = 0;
 
+/*
+================================
+Function definitions
+================================
+*/
+
+/*
+Function to add a new agent to the list
+Parameters: none
+Return: none
+*/
 void addAgent();
 
+/*
+Function to read the agent's attributes and validate them
+Parameters: the agent to modify
+Return: none
+*/
 void readAgent(Agent *agent);
 
+/*
+Function to print all agents
+Parameters: none
+Return: none
+*/
 void showAgents();
 
+/*
+Function print a specific agent
+Parameters: agent to print
+Return: none
+*/
 void printAgent(Agent agent);
 
+/*
+Function to determine if a string is a valid active
+Parameters: string to validate
+Return: if it is valid
+*/
 bool validateActive(char *mission);
 
+/*
+Function to determine if a string is a valid mission
+Parameters: string to validate
+Return: if it is valid
+*/
 bool validateMission(char *mission);
 
+/*
+Function to add a new node of type char to the list
+Parameters: head of the list, content to add
+Return: none
+*/
 void addNodeChar(NodeChar **head, char *content);
 
+/*
+Function to delete an agent from the list
+Parameters: none
+Return: none
+*/
 void deleteAgent();
 
+/*
+Function to delete the lists of an agent
+Parameters: agent to delete
+Return: none
+*/
 void deleteAgentInfo(Agent agent);
 
+/*
+Function to determine if the id is not already present
+Parameters: id to validate
+Return: if it is valid
+*/
+bool isValidId(int id);
+
+// Main function
 int main(void)
 {
     int opt;
@@ -67,9 +150,18 @@ int main(void)
                 break;
             case 4:
                 running = false;
+                break;
+            default:
+                printf("\nInvalid option\n");
         }
     }
 }
+
+/*
+================================
+Function Implementations
+================================
+*/
 
 void addAgent()
 {
@@ -146,7 +238,7 @@ bool validateActive(char *active)
 
 void readAgent(Agent *agent)
 {
-    int activeAmount = 0, missionAmount = 0;
+    int activeAmount = 0, missionAmount = 0, id = 0;
 
     char mission[100];
     char active[100];
@@ -162,8 +254,13 @@ void readAgent(Agent *agent)
     printf("Enter new agent last name: ");
     scanf("%s", agent->lastName);
 
-    printf("Enter new agent ID (numeric): ");
-    scanf("%d", &agent->id);
+    do
+    {
+        printf("Enter agent ID: ");
+        scanf("%d", &id);
+    } while (!isValidId(id));
+
+    agent->id = id;
 
     printf("Enter new agent age: ");
     scanf("%d", &agent->age);
@@ -210,7 +307,7 @@ void readAgent(Agent *agent)
 void showAgents()
 {
     printf("\n\nAGENTS:\n\n");
-    
+
     if (headAgents == 0)
     {
         printf("No agents registered!\n\n");
@@ -334,6 +431,7 @@ void deleteAgent()
             printf("\nAgent %d deleted successfully.\n", id);
             return;
         }
+        curr = curr->next;
     }
 
     printf("\nError: Agent not found!\n");
@@ -360,4 +458,24 @@ void deleteAgentInfo(Agent agent)
         curr1 = curr1->next;
         free(curr2);
     }
+}
+
+bool isValidId(int id)
+{
+    NodeAgent *curr = headAgents;
+
+    if (headAgents == 0)
+        return true;
+
+    while (curr != 0)
+    {
+        if (curr->agent.id == id)
+        {
+            printf("ID already exists!\n");
+            return false;
+        }
+        curr = curr->next;
+    }
+
+    return true;
 }
