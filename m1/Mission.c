@@ -58,12 +58,16 @@ Function definitions
 */
 
 /*
-
+Function to show menu
+Parameters: none
+Return: none
 */
 void showMenu();
 
 /*
-
+Function to encrypt string using multiplicative cypher
+Parameters: string to encrypt
+Return: none
 */
 void encrypt(char message[100]);
 
@@ -117,11 +121,18 @@ Return: none
 void addNodeChar(NodeChar **head, char *content);
 
 /*
+Function to delete an agent
+Parameters: none
+Return: none
+*/
+void askDeleteAgent();
+
+/*
 Function to delete an agent from the list
 Parameters: none
 Return: none
 */
-void deleteAgent();
+void deleteAgent(int id);
 
 /*
 Function to delete the lists of an agent
@@ -131,13 +142,53 @@ Return: none
 void deleteAgentInfo(Agent agent);
 
 /*
-
+Function to find a given agent
+Parameters: none
+Return: none
 */
 void findAgent();
 
+/*
+Function to find a given agent with last name
+Parameters: none
+Return: none
+*/
 void findAgentLastName();
 
+/*
+Function to find a given agent with active
+Parameters: none
+Return: none
+*/
 void findAgentActive();
+
+/*
+Function to manage a found agent
+Parameters: found agent
+Return: none
+*/
+void manageAgent(Agent *agent);
+
+/*
+Function to edit given agent
+Parameters: found agent
+Return: none
+*/
+void editAgent(Agent *agent);
+
+/*
+Function to add new active to agent
+Parameters: agent to modify
+Return: none
+*/
+void addActive(Agent *agent);
+
+/*
+Function to add new mission to agent
+Parameters: agent to modify
+Return: none
+*/
+void addMission(Agent *agent);
 
 /*
 Function to determine if the id is not already present
@@ -147,7 +198,9 @@ Return: if it is valid
 bool isValidId(int id);
 
 /*
-
+Function to validate password
+Parameters: password and real password
+Return: if it is valid
 */
 bool validatePassword(char *p, char *rp);
 
@@ -203,7 +256,7 @@ void showMenu()
                 findAgent();
                 break;
             case 4:
-                deleteAgent();
+                askDeleteAgent();
                 break;
             case 5:
                 running = false;
@@ -304,6 +357,19 @@ bool validateActive(char *active)
 
 void readAgent(Agent *agent)
 {
+    char enterName[] = "Enter new agent first name: ";
+    char enterLName[] = "Enter new agent last name: ";
+    char enterID[] = "Enter agent ID: ";
+    char enterAge[] = "Enter new agent age: ";
+    char enterAAmount[] = "Enter active amount: ";
+    char enterActive[] ="Enter new active: ";
+    char enterMAmount[] = "Enter mission amount: ";
+    char enterMission[] = "Enter new mission: ";
+    char invalidActive[] = "Invalid active! Enter it again: ";
+    char invalidMission[] = "Invalid mission! Enter it again: ";
+    char added[] = "Agent added succesfully";
+
+
     int activeAmount = 0, missionAmount = 0, id = 0;
 
     char mission[100];
@@ -314,69 +380,87 @@ void readAgent(Agent *agent)
     agent->headActivos = 0;
     agent->headMissions = 0;
 
-    printf("Enter new agent first name: ");
+    encrypt(enterName);
+    encrypt(enterLName);
+    encrypt(enterID);
+    encrypt(enterAge);
+    encrypt(enterAAmount);
+    encrypt(enterActive);
+    encrypt(enterMAmount);
+    encrypt(enterMission);
+    encrypt(invalidActive);
+    encrypt(invalidMission);
+    encrypt(added);
+
+    printf("%s", enterName);
     scanf("%s", agent->name);
 
-    printf("Enter new agent last name: ");
+    printf("%s", enterLName);
     scanf("%s", agent->lastName);
 
     do
     {
-        printf("Enter agent ID: ");
+        printf("%s", enterID);
         scanf("%d", &id);
     } while (!isValidId(id));
 
     agent->id = id;
 
-    printf("Enter new agent age: ");
+    printf("%s", enterAge);
     scanf("%d", &agent->age);
 
-    printf("Enter active amount: ");
+    printf("%s", enterAAmount);
     scanf("%d", &activeAmount);
 
     for (int i = 0; i < activeAmount; i++)
     {
-        printf("Enter active #%d: ", i+1);
+        printf("%s", enterActive);
         scanf("%s", active);
 
         while (!validateActive(active))
         {
-            printf("Invalid active! Enter it again: ");
+            printf("%s", invalidActive);
             scanf("%s", active);
         }
 
         addNodeChar(&agent->headActivos, active);
     }
     
-    printf("Enter mission amount: ");
+    printf("%s", enterMAmount);
     scanf("%d", &missionAmount);
 
     curr = agent->headMissions;
 
     for (int i = 0; i < missionAmount; i++)
     {
-        printf("Enter mission #%d: ", i+1);
+        printf("%s",enterMission);
         scanf("%s", mission);
 
         while (!validateMission(mission))
         {
-            printf("Invalid mission! Enter it again: ");
+            printf("%s", invalidMission);
             scanf("%s", mission);
         }
 
         addNodeChar(&agent->headMissions, mission);
     }
 
-    printf("Agent added succesfully\n\n");
+    printf("%s\n\n", added);
 }
 
 void showAgents()
 {
-    printf("\n\nAGENTS:\n\n");
+    char agents[] = "AGENTS:";
+    char noAgents[] = "No agents registered!";
+
+    encrypt(agents);
+    encrypt(noAgents);
+
+    printf("\n\n%s\n\n", agents);
 
     if (headAgents == 0)
     {
-        printf("No agents registered!\n\n");
+        printf("%s\n\n", noAgents);
     }
 
     NodeAgent *curr = headAgents;
@@ -390,54 +474,79 @@ void showAgents()
 
 void printAgent(Agent agent)
 {
-    NodeChar *curr = 0;
+    char name[300];
+    char age[10];
+    char id[10];
+    char active[100];
+    char mission[100];
 
-    printf("Agent %s %s\n", agent.name, agent.lastName);
-    printf("ID: %d\n", agent.id);
-    printf("Age: %d\n", agent.age);
+    
+    char actives[] = "Actives: ";
+    char missions[] = "Missions: ";
+    char noActives[] = "No actives!";
+    char noMissions[] = "No missions!";
 
-    if (agent.headActivos == 0)
+    NodeChar *curr;
+    
+    sprintf(name, "Agent %s %s", agent.name, agent.lastName);
+    sprintf(age, "Age: %d", agent.age);
+    sprintf(id, "ID: %d", agent.id);
+
+    encrypt(name);
+    encrypt(age);
+    encrypt(id);
+    encrypt(actives);
+    encrypt(missions);
+    encrypt(noActives);
+    encrypt(noMissions);
+
+    printf("%s\n", name);
+    printf("%s\n", id);
+    printf("%s\n", age);
+
+    curr = agent.headActivos;
+
+    printf("----------\n");
+
+    if (curr == 0)
     {
-        printf("No Actives! \n");
+        printf("%s\n", noActives);
     }
     else
     {
-        printf("------------\n");
-        printf("Actives: \n");
-        curr = agent.headActivos;
-
+        printf("%s:\n", actives);
         while (curr != 0)
         {
-            printf("%s, ", curr->content);
+            sprintf(active, "%s, ", curr->content);
+            encrypt(active);
+            printf("%s", active);
             curr = curr->next;
         }
 
         printf("\n");
     }
-    
-    if (agent.headMissions == 0)
+
+    curr = agent.headMissions;
+    printf("----------\n");
+
+    if (curr == 0)
     {
-        printf("No Missions! \n");
+        printf("%s\n", noMissions);
     }
     else
     {
-        printf("------------\n");
-
-        printf("Missions: \n");
-        curr = agent.headMissions;
-
+        printf("%s:\n", missions);
         while (curr != 0)
         {
-            printf("%s, ", curr->content);
+            sprintf(mission, "%s, ", curr->content);
+            encrypt(mission);
+            printf("%s", mission);
             curr = curr->next;
         }
 
         printf("\n");
-        printf("------------\n");
     }
-    
-
-    printf("\n");
+    printf("----------\n");
 }
 
 void addNodeChar(NodeChar **head, char* content)
@@ -462,18 +571,32 @@ void addNodeChar(NodeChar **head, char* content)
     curr->next->next = 0;
 }
 
-void deleteAgent()
+void askDeleteAgent()
 {
+    char enter[] = "Enter agent ID: ";
     int id = 0;
+
+    encrypt(enter);
+
+    printf("%s", enter);
+    scanf("%d", &id);
+
+    deleteAgent(id);
+}
+
+void deleteAgent(int id)
+{
+    char error[] = "\nError: Agent not found!\n";
+    char success[] = "\nAgent deleted successfully.\n";
     NodeAgent *curr = headAgents;
     NodeAgent *tmp;
 
-    printf("Enter agent ID: ");
-    scanf("%d", &id);
+    encrypt(error);
+    encrypt(success);
 
     if (curr == 0)
     {
-        printf("\nError: Agent not found!\n");
+        printf("%s", error);
         return;
     }
 
@@ -482,7 +605,7 @@ void deleteAgent()
         headAgents = curr->next;
         deleteAgentInfo(curr->agent);
         free(curr);
-        printf("\nAgent %d deleted successfully.\n", id);
+        printf("%s", success);
         return;
     }
 
@@ -494,13 +617,13 @@ void deleteAgent()
             curr->next = curr->next->next;
             deleteAgentInfo(tmp->agent);
             free(tmp);
-            printf("\nAgent %d deleted successfully.\n", id);
+            printf("%s", success);
             return;
         }
         curr = curr->next;
     }
 
-    printf("\nError: Agent not found!\n");
+    printf("%s", error);
 }
 
 void deleteAgentInfo(Agent agent)
@@ -578,8 +701,6 @@ void findAgentLastName()
     printf("%s", askLastName);
     scanf("%s", lastName);
 
-    encrypt(lastName);
-
     while (curr != 0)
     {
         if (strcmp(lastName, curr->agent.lastName) == 0)
@@ -587,6 +708,40 @@ void findAgentLastName()
             manageAgent(&curr->agent);
             return;
         }
+        curr = curr->next;
+    }
+
+    printf("%s", noAgents);
+}
+
+void findAgentActive()
+{
+    char askLastName[] = "Enter agent's active: ";
+    char noAgents[] = "No agents found with given active\n";
+    char active[100];
+    NodeAgent *curr = headAgents;
+    NodeChar *currChar;
+
+    encrypt(askLastName);
+    encrypt(noAgents);
+
+    printf("%s", askLastName);
+    scanf("%s", active);
+
+    while (curr != 0)
+    {
+        currChar = curr->agent.headActivos;
+
+        while (currChar != 0) 
+        {
+            if (strcmp(active, currChar->content) == 0)
+            {
+                manageAgent(&curr->agent);
+                return;
+            }
+            currChar = currChar->next;
+        }
+        curr = curr->next;
     }
 
     printf("%s", noAgents);
@@ -594,12 +749,139 @@ void findAgentLastName()
 
 void manageAgent(Agent *agent)
 {
+    char agentFound[] = "Agent found:";
+    char options[] = "What do you want to do with this agent?\n 1. Edit \n 2. Delete\n 3. Canel \nOption: ";
+    char invalidOption[] = "Invalid option. Try again ";
+    int opt;
 
+    encrypt(options);
+    encrypt(invalidOption);
+    encrypt(agentFound);
+
+    printf("\n%s\n", agentFound);
+    printAgent(*agent);
+
+    do
+    {
+        printf("%s", options);
+        scanf("%d", &opt);
+        
+        if (opt < 1 || opt > 3)
+        {
+            printf("%s", invalidOption);
+        }
+
+    } while (opt < 1 || opt > 3);
+    
+
+    if (opt == 3)
+    {
+        return;
+    }
+
+    switch (opt)
+    {
+        case 1:
+            editAgent(agent);
+            break;
+        case 2:
+            deleteAgent(agent->id);
+            break;
+    }
+}
+
+void editAgent(Agent *agent)
+{
+    char options[] = "What do you want to add?\n 1. Actives \n 2. Missions\n 3. Cancel \nOption: ";
+    char invalidOption[] = "Invalid option. Try again ";
+    char edited[] = "Agent edited successfully";
+    int opt;
+
+    encrypt(options);
+    encrypt(invalidOption);
+    encrypt(edited);
+
+    do
+    {
+        printf("%s", options);
+        scanf("%d", &opt);
+        
+        if (opt < 1 || opt > 3)
+        {
+            printf("%s", invalidOption);
+        }
+
+    } while (opt < 1 || opt > 3);
+    
+
+    if (opt == 3)
+    {
+        return;
+    }
+
+    switch (opt)
+    {
+        case 1:
+            addActive(agent);
+            break;
+        case 2:
+            addMission(agent);
+            break;
+    }
+
+    printf("%s\n", edited);
+}
+
+void addActive(Agent *agent)
+{
+    char enter[] = "Enter active to add: ";
+    char invalid[] = "Invalid active! Enter it again: ";
+    char active[20];
+
+    encrypt(enter);
+    encrypt(invalid);
+
+    printf("%s\n", enter);
+
+    scanf("%s", active);
+
+    while (!validateActive(active))
+    {
+        printf("%s", invalid);
+        scanf("%s", active);
+    }
+
+    addNodeChar(&agent->headActivos, active);
+}
+
+void addMission(Agent *agent)
+{
+    char enter[] = "Enter mission to add: ";
+    char invalid[] = "Invalid mission! Enter it again: ";
+    char mission[20];
+
+    encrypt(enter);
+    encrypt(invalid);
+
+    printf("%s\n", enter);
+
+    scanf("%s", mission);
+
+    while (!validateMission(mission))
+    {
+        printf("%s", invalid);
+        scanf("%s", mission);
+    }
+
+    addNodeChar(&agent->headMissions, mission);
 }
 
 bool isValidId(int id)
 {
+    char invalid[] = "ID already exists!";
     NodeAgent *curr = headAgents;
+
+    encrypt(invalid);
 
     if (headAgents == 0)
         return true;
@@ -608,7 +890,7 @@ bool isValidId(int id)
     {
         if (curr->agent.id == id)
         {
-            printf("ID already exists!\n");
+            printf("%s\n", invalid);
             return false;
         }
         curr = curr->next;
