@@ -594,7 +594,10 @@ void findAgentLastName()
 
 void manageAgent(Agent *agent)
 {
-
+    char agentFound[] = "Agent found: \n";
+    char name[] = agent->name;
+    char lastName[] = agent->lastName;
+    char 
 }
 
 bool isValidId(int id)
