@@ -17,7 +17,7 @@ void cleanStdin(void);
 union Input
 {
     int integer;
-    char character;
+    char character[100];
     double ddouble;
 };
 
@@ -31,8 +31,8 @@ int main(void) {
     cleanStdin();
     printf("Your integer %d storage size is %ld bytes\n", in.integer, sizeof(in.integer));
 
-    printf("Enter a character: ");
-    scanf("%c", &in.character);
+    printf("Enter a string: ");
+    scanf("%s", &in.character);
 
     cleanStdin();
     printf("Your char %c storage size is %ld byte. And I can read it as %c or as %d.\n",
