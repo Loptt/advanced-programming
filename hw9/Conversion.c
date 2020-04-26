@@ -10,12 +10,6 @@ int asciiHEXToInt(char *s);
 
 double asciiToDouble(char *s);
 
-bool validateBinary(char *s);
-
-bool validateHex(char *s);
-
-bool validateDouble(char *s);
-
 int main(void)
 {
     printf("%d\n", asciiHEXToInt("B"));
@@ -71,19 +65,4 @@ int asciiHEXToInt(char *s)
     }
     
     return result;
-}
-
-bool validateBinary(char *s)
-{
-
-}
-
-bool validateHex(char *s)
-{
-    
-}
-
-bool validateDouble(char *s)
-{
-    
 }
