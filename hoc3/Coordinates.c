@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     input = fopen(file, "r");
 
     coordAmount = countCoordinates(input);
-    coordList = (Coordinate *) malloc(sizeof(Coordinate)*coordAmount);
+    coordList = (Coordinate *) malloc(sizeof(Coordinate) * coordAmount);
 
     readCoordinates(input, coordList, coordAmount);
     //printCoordinates(coordList, coordAmount);
