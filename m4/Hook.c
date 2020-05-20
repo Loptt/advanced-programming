@@ -1,50 +1,38 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <X11/Xlib.h>
 
-char *key_name[] = {
-    "first",
-    "second (or middle)",
-    "third",
-    "fourth",  // :D
-    "fivth"    // :|
-};
+void writeFile(int x, int y) {
+    FILE *out = fopen("output.txt", "a");
 
-int main(int argc, char **argv)
+    fprintf(out, "%d %d\n", x, y);
+
+    fclose(out);
+}
+
+int main()
 {
-    Display *display;
-    XEvent xevent;
     Window window;
+    XEvent xevent;
+    Display *display;
 
-    if( (display = XOpenDisplay(NULL)) == NULL )
-        return -1;
+    if ((display = XOpenDisplay(NULL)) == NULL )
+    {
+        exit(-1);
+    }
 
 
     window = DefaultRootWindow(display);
     XAllowEvents(display, AsyncBoth, CurrentTime);
 
-    XGrabPointer(display, 
-                 window,
-                 1, 
-                 PointerMotionMask | ButtonPressMask | ButtonReleaseMask , 
-                 GrabModeAsync,
-                 GrabModeAsync, 
-                 None,
-                 None,
-                 CurrentTime);
+    XGrabPointer(display, window, 1, PointerMotionMask | ButtonPressMask | ButtonReleaseMask, 
+        GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
 
     while(1) {
         XNextEvent(display, &xevent);
-
-        switch (xevent.type) {
-            case MotionNotify:
-                printf("Mouse move      : [%d, %d]\n", xevent.xmotion.x_root, xevent.xmotion.y_root);
-                break;
-            case ButtonPress:
-                printf("Button pressed  : %s\n", key_name[xevent.xbutton.button - 1]);
-                break;
-            case ButtonRelease:
-                printf("Button released : %s\n", key_name[xevent.xbutton.button - 1]);
-                break;
+        
+        if (xevent.type == ButtonPress) {
+            writeFile(xevent.xmotion.x_root, xevent.xmotion.y_root);
         }
     }
 
